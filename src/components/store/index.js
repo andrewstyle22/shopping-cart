@@ -34,7 +34,16 @@ export default new Vuex.Store({
           quantity: cartItem.quantity
         }
       })
-    }
+    },
+    cartTotal(state, getters) {
+      // let total = 0;
+      // getters.cartProducts.forEach(product => {
+      //   total += product.price * product.quantity;
+      // });
+      // return total;
+      // lo de arriba es igual a lo de abajo
+      return getters.cartProducts.reduce((total, product) => total + product.price * product.quantity, 0);
+    },
   },
   actions: { // = métodos, aquí realizamos la llamada al api
              // Las acciones son métodos del store

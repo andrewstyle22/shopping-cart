@@ -3,9 +3,10 @@
     <h1>Shopping Cart</h1>
     <ul>
       <li v-for="(product, index) in products" :key="index">
-        {{ product.title }} - {{ product.price }} - {{ product.quantity }}
+        {{ product.title }} - {{ product.price | currency }} - {{ product.quantity }}
       </li>
     </ul>
+    <p>Total: {{ total | currency }}</p>
   </div>
 </template>
 
@@ -16,6 +17,9 @@ export default {
     /* Devolverá el getter cartProducts */
     products() {
       return this.$store.getters.cartProducts
+    },
+    total() {
+      return this.$store.getters.cartTotal
     },
   },
 }
