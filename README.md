@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # shopping-cart
 
 > A Vue.js project
@@ -20,6 +19,3 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-=======
-# shopping-cart
->>>>>>> 9f99706549b70d63b32d1844969f36d6f55de3d5
