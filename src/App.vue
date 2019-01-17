@@ -1,16 +1,28 @@
 <template>
   <div id="app">
     <product-list/>
+    <hr>
+    <!--
+      Aquí normalmente pasaríamos una propiedad como products <shopping-cart :products/>
+      pero ahora no es necesario, puesto que el componente ShoppingCart puede acceder a la
+      tienda directamente.
+      Recordemos que solo guardaremos el código del producto y la cantidad de nuestro
+      carrito.
+    -->
+
+    <shopping-cart/>
   </div>
 </template>
 
 <script>
 import ProductList from './components/ProductList';
+import ShoppingCart from './components/ShoppingCart';
 
 export default {
   name: 'app',
   components: {
-    ProductList
+    ProductList,
+    ShoppingCart
   }
 }
 </script>

@@ -23,6 +23,17 @@ export default new Vuex.Store({
     // cuando una dependencia cambia.
     availableProducts(state, getters) {
       return state.products.filter(product => product.inventory > 0);
+    },
+    // Obtener los productos del carrito
+    cartProducts(state) {
+      return state.cart.map(cartItem => {
+        const product = state.products.find(product => product.id === cartItem.id);
+        return {
+          title: product.title,
+          price: product.price,
+          quantity: cartItem.quantity
+        }
+      })
     }
   },
   actions: { // = métodos, aquí realizamos la llamada al api
@@ -59,16 +70,16 @@ export default new Vuex.Store({
     // de una mutación
     addProductToCart(context, product) {
       if(product.inventory > 0) {
-        const cartItme = context.state.cart.find(item => item.id === product.id);
+        const cartItem = context.state.cart.find(item => item.id === product.id);
         if(!cartItem) {
           // si el item no existe lo añadiremos al carrito
           context.commit('pushProductToCart', product.id);
+        } else {
+          // Si el cartItem existe, haremos commit de otra mutación
+          context.commit('incrementItemQuantity', cartItem);
         }
-      } else {
-        // Si el cartItem existe, haremos commit de otra mutación
-        context.commit('incrementItemQuantity', cartItem);
+        context.commit('decrementProductInventory', product);
       }
-      context.commit('decrementProductInventory', product);
     }
   },
   mutations: { // responsables de establecer y actualizar el estado
@@ -85,6 +96,20 @@ export default new Vuex.Store({
     setProducts(state, products) {
       // update products
       state.products = products; // actualizamos el estado de products en la carga
+    },
+    // No necesitamos conocer realmente el código de cada mutación, porque cada
+    // mutación posee una única responsabilidad de cambiar el estado
+    pushProductToCart(state, productId) {
+      state.cart.push({
+        id: productId,
+        quantity:1
+      })
+    },
+    incrementItemQuantity(state, cartItem){
+      cartItem.quantity++;
+    },
+    decrementProductInventory(state, product){
+      product.inventory--;
     }
   }
 });

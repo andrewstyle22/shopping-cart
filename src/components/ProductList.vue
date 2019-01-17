@@ -6,7 +6,8 @@
       src="https://i.imgur.com/JfPpwOA.gif" alt="">
     <ul v-else>
       <li v-for="(product, index) in products" :key="index">
-        {{ product.title }} - {{ product.price}}
+        {{ product.title }} - {{ product.price}} - {{ product.inventory }}
+        <button @click="addProductToCart(product)">Add to Cart</button>
       </li>
     </ul>
   </div>
@@ -61,6 +62,11 @@ export default {
     this.loading = true;
     this.$store.dispatch('fetchProducts').then(() => this.loading = false);
     // De esta manera desacoplamos los componentes de la lógica de la API
+  },
+  methods:{
+    addProductToCart(product) {
+      this.$store.dispatch('addProductToCart', product)
+    }
   },
 }
 </script>
