@@ -13,6 +13,7 @@ export default new Vuex.Store({
     // código y el número de items que el usuario desee comprar
     // necesitaremos una acción y una mutación para añadir el producto al carrito
     cart: [],
+    checkoutStatus: null,
   },
   getters: { // = computed properties global
     // por ejemplo queremos mostrar los productos que no están agotados
@@ -49,7 +50,7 @@ export default new Vuex.Store({
              // Las acciones son métodos del store
              // caundo necesitamos ubicar los productos desde una API
              // creamos una acción para ello
-             // Las acciones son usualmente asíncronas
+             // Las acciones son usualmente asíncronas (ejemplo: AJAX)
     // Vuex automáticamente pasa el objeto context como primer parámetro
     // a todas sus acciones.
     // El objeto context provee el mismo conjunto de métodos y propiedades
@@ -89,7 +90,24 @@ export default new Vuex.Store({
         }
         context.commit('decrementProductInventory', product);
       }
-    }
+    },
+    // Utilizaremos desestructuración de argumentos de ES6, para tomar solo las
+    // propiedades que necesitamos del contexto (context), state y commit
+    // checkout(context) {
+    checkout({ state, commit }) {
+      shop.buyProducts(
+        state.cart,
+        // El siguiente argumento es la función callback a ejecutar si hay éxito
+        () => {
+          commit('emptyCart')
+          commit('setCheckoutStatus', 'success')
+        },
+        // este argumento es si falla al ejecutar
+        () => {
+          commit('setCheckoutStatus', 'fail')
+        }
+      )
+    },
   },
   mutations: { // responsables de establecer y actualizar el estado
     // Las mutationes son responsables de cambios de estado individuales.
@@ -119,7 +137,14 @@ export default new Vuex.Store({
     },
     decrementProductInventory(state, product){
       product.inventory--;
-    }
+    },
+    setCheckoutStatus(state, status) {
+      state.checkoutStatus = status; // al status pasado
+    },
+    emptyCart(state) {// esta mutación no requiere parámetros, puesto que solo
+                      // reinicia el carrito fijando state.cart a un arreglo vacío
+      state.cart = [];
+    },
   }
 });
 
