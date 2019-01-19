@@ -7,7 +7,16 @@
     <ul v-else>
       <li v-for="(product, index) in products" :key="index">
         {{ product.title }} - {{ product.price | currency }} - {{ product.inventory }}
-        <button @click="addProductToCart(product)">Add to Cart</button>
+        <!-- al añadir la propiedad computada productsInStock que nos devuelve
+             el getter quitamos esto de button :disabled="!product.inventory > 0"
+             y añadimos :disabled="!productsInStock(product)" y pasamos el product
+             como argumento
+        -->
+        <button
+          :disabled="!productsInStock(product)"
+          @click="addProductToCart(product)">
+          Add to Cart
+        </button>
       </li>
     </ul>
   </div>
@@ -35,8 +44,19 @@ export default {
   computed: {
     products() {
       // return store.state.products;
-      return this.$store.getters.availableProducts;
-    }
+      // return this.$store.getters.availableProducts; // Mostrar solo los productos
+                                                    // que tenemos en existencia
+      /*ahora en el vídoe Dynamic Vuex Getters hacemos un cambio,
+        es mostrar todos los productos y desactivar el botón Añadir al carrito si
+        el elemento se agota. Para empezar, reemplazamos el getter con stat.products
+        dentro de nuestra propidad computada
+      */
+     return this.$store.state.products;
+    },
+    // este devolverá el getter productsInStock
+    productsInStock() {
+      return this.$store.getters.productsInStock;
+    },
   },
   created() { // Aquí solíamos actualizar la propiedad local de datos de products
               // pero ahora queremos actualizar los productos en el estado

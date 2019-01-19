@@ -45,6 +45,18 @@ export default new Vuex.Store({
       // lo de arriba es igual a lo de abajo
       return getters.cartProducts.reduce((total, product) => total + product.price * product.quantity, 0);
     },
+    /* Los getters no aceptan argumentsos de forma predeterminada, pero podemos
+       pasarle argumentos a los getters devolviendo una función
+    */
+    productsInStock(state) {
+      // Nos devolverá una función que aceptará un producto como un argumento
+      // En lugar de pasar un producto, podemos pasar su código com argumento
+      // y tomar el producto del estado, aunque basta con pasar el objeto product
+      // usaremos este getter en ProductList
+      return (product) => {
+        return product.inventory > 0;
+      }
+    },
   },
   actions: { // = métodos, aquí realizamos la llamada al api
              // Las acciones son métodos del store
@@ -78,17 +90,25 @@ export default new Vuex.Store({
     },
     // las acciones es responsables por la lógica implicada en la activación
     // de una mutación
-    addProductToCart(context, product) {
-      if(product.inventory > 0) {
-        const cartItem = context.state.cart.find(item => item.id === product.id);
+    // addProductToCart(context, product) {
+    addProductToCart({ state, getters, commit }, product) {
+      // A partir del vídeo Dynamic Vuex Getters 1.46
+      // Usaremos el getter dentro de la acción addProductToCart, en vez de
+      // de seguir repitiendo. Dentro de la acción, podemos acceder a los getters
+      // bajo context.getters, reemplazaremos if(product.inventory > 0) por
+      // if (context.getters.productsInStock(product))
+      // if(product.inventory > 0), después con desestructuración de argumentos
+      // para tomar solo las propiedades necesarias del contexto
+      if (getters.productsInStock(product)) {
+        const cartItem = state.cart.find(item => item.id === product.id);
         if(!cartItem) {
           // si el item no existe lo añadiremos al carrito
-          context.commit('pushProductToCart', product.id);
+          commit('pushProductToCart', product.id);
         } else {
           // Si el cartItem existe, haremos commit de otra mutación
-          context.commit('incrementItemQuantity', cartItem);
+          commit('incrementItemQuantity', cartItem);
         }
-        context.commit('decrementProductInventory', product);
+        commit('decrementProductInventory', product);
       }
     },
     // Utilizaremos desestructuración de argumentos de ES6, para tomar solo las
