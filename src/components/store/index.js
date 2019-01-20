@@ -45,7 +45,7 @@ export default new Vuex.Store({
       // lo de arriba es igual a lo de abajo
       return getters.cartProducts.reduce((total, product) => total + product.price * product.quantity, 0);
     },
-    /* Los getters no aceptan argumentsos de forma predeterminada, pero podemos
+    /* Los getters no aceptan argumentos de forma predeterminada, pero podemos
        pasarle argumentos a los getters devolviendo una función
     */
     productsInStock(state) {
@@ -97,7 +97,7 @@ export default new Vuex.Store({
       // de seguir repitiendo. Dentro de la acción, podemos acceder a los getters
       // bajo context.getters, reemplazaremos if(product.inventory > 0) por
       // if (context.getters.productsInStock(product))
-      // if(product.inventory > 0), después con desestructuración de argumentos
+      // después con desestructuración de argumentos
       // para tomar solo las propiedades necesarias del contexto
       if (getters.productsInStock(product)) {
         const cartItem = state.cart.find(item => item.id === product.id);

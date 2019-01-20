@@ -8,7 +8,7 @@
     </ul>
     <p>Total: {{ total | currency }}</p>
     <!-- podemos crear un método o activar la acción directamente desde nuestra plantilla-->
-    <button @click="$store.dispatch('checkout')">Checkout</button>
+    <button @click="checkout">Checkout</button>
     <p if="$store.state.checkoutStatus">{{ $store.state.checkoutStatus }}</p> <!-- Mostraremos el status de checkout -->
       <!--
         Este mensaje debería aparecer una vez el usuario intente
@@ -20,16 +20,29 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
   computed: {
-    /* Devolverá el getter cartProducts */
-    products() {
-      return this.$store.getters.cartProducts
-    },
-    total() {
-      return this.$store.getters.cartTotal
-    },
+    ...mapGetters({
+      products: 'cartProducts',
+      total: 'cartTotal',
+    }),
+    // comentamos este código pq mapeamos los getters Vuex Map Helpers 5:37
+    // /* Devolverá el getter cartProducts */
+    // products() {
+    //   return this.$store.getters.cartProducts
+    // },
+    // total() {
+    //   return this.$store.getters.cartTotal
+    // },
+    ...mapState({
+      checkoutStatus: 'checkoutStatus',
+    }),
+  },
+  methods: {
+    ...mapActions(['checkout']),// podemos pasar un objeto o un arreglo.
+                                // Vas a la plantilla y reemplazas $store.dispatch('checkout')
   },
 }
 </script>
