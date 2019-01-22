@@ -9,7 +9,8 @@
     <p>Total: {{ total | currency }}</p>
     <!-- podemos crear un método o activar la acción directamente desde nuestra plantilla-->
     <button @click="checkout">Checkout</button>
-    <p if="$store.state.checkoutStatus">{{ $store.state.checkoutStatus }}</p> <!-- Mostraremos el status de checkout -->
+    <p if="$store.state.checkoutStatus">{{ $store.state.checkoutStatus }}</p> <!-- Mostraremos el status de checkout-->
+    <p v-if="checkoutStatus">{{checkoutStatus}}</p>
       <!--
         Este mensaje debería aparecer una vez el usuario intente
         procesar el pago, es decir, si checkoutStatus no es nulo.
@@ -37,7 +38,10 @@ export default {
     //   return this.$store.getters.cartTotal
     // },
     ...mapState({
-      checkoutStatus: 'checkoutStatus',
+      // checkoutStatus: 'checkoutStatus',
+      checkoutStatus: state => state.cart.checkoutStatus, // al crear cart.js
+                              // y mover los métodos tenemos que llamarlo de esa forma
+                              // Vuex Modules 4:59 lo cambiamos
     }),
   },
   methods: {

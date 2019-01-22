@@ -50,7 +50,11 @@ export default {
   computed: {
     // fusionar mapState
     ...mapState({
-      products: state => state.products,
+      // products: state => state.products, // Vuex Modules 4:46 cambia, lo demás no cambia
+                                            // porque están registradas bajo el espacio de
+                                            // nombre global (global namespace)
+      // products: state => state.products.products,// Vue modules 5:53 hemos cambiado el nombre
+      products: state => state.products.items,
     }),
     // como declaramos products dentro del mapState, no necesitamos la propiedad
     // 'products' antigua
