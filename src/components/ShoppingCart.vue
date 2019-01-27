@@ -25,9 +25,29 @@ import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
   computed: {
-    ...mapGetters({
+    ...mapGetters('cart', {
+      // El namespaced es el nombre del módulo. Así, que dentro de los getters
+      // de mapeo podemos mapear products a cart/carProducts yo total a cart/cartTotal
+      // products: 'cartProducts', Namespaced Vuex Modules 3:01
+      // products: 'cart/cartProducts',
       products: 'cartProducts',
+      // total: 'cart/cartTotal',
       total: 'cartTotal',
+      // Sin embargo, esto puede llegar a se verboso  si se tiene muchos getters.
+      // Afortunadamente, podemos pasar el namespace del módulo como primer argumento.
+      // Entonces todas las relaciones se hacen usando el módulo como contexto.
+      // y añadimos 'cart' al mapGetters => ...mapGetters('cart',. Con esto podemos eliminar
+      // cart de cart/cartProducts y queda solo cartProducts
+
+      // Puede existir la duda de cómo combiar getters con y sin namespaced asignado.
+      // La solución es sencilla. Se puede tener una segunda llamada a mapGetters.
+      // Por ejemplo, para mapear el getter productIsInStock del módulo products,
+      // podemos hacer esto.
+      // ...mapGetters('products', { // pasamos el namespaced
+      //   productIsInStock: 'productsIsInStock'
+      // }),
+      // podemos llamar a mapGetters cuantas veces queramos. Los mismo se aplica para
+      // mapActions y mapMutations.
     }),
     // comentamos este código pq mapeamos los getters Vuex Map Helpers 5:37
     // /* Devolverá el getter cartProducts */
@@ -37,16 +57,22 @@ export default {
     // total() {
     //   return this.$store.getters.cartTotal
     // },
-    ...mapState({
+    ...mapState('cart', {
       // checkoutStatus: 'checkoutStatus',
-      checkoutStatus: state => state.cart.checkoutStatus, // al crear cart.js
+      // checkoutStatus: state => state.cart.checkoutStatus, // al crear cart.js
                               // y mover los métodos tenemos que llamarlo de esa forma
                               // Vuex Modules 4:59 lo cambiamos
+      // Namespaced Vuex Modules 4:02 comentamos checkoutStatus: state => state.cart.checkoutStatus
+      checkoutStatus: state => state.checkoutStatus,
+      // hacemos lo mismo en con mapActions.
     }),
   },
   methods: {
-    ...mapActions(['checkout']),// podemos pasar un objeto o un arreglo.
+    //...mapActions(['checkout']),// podemos pasar un objeto o un arreglo.
                                 // Vas a la plantilla y reemplazas $store.dispatch('checkout')
+    // Namespaced Vuex Modules 4:07 cambiamos ...mapActions(['checkout']), por
+    // ...mapActions('cart', ['checkout']),
+    ...mapActions('cart', ['checkout']),
   },
 }
 </script>

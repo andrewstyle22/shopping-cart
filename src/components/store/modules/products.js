@@ -1,6 +1,13 @@
 import shop from '@/api/shop';
 
 export default {
+  // Queremos que nuestrso módulos tengan mejor conexión o
+  // protección podemos marcarlos dentro de un nombre de
+  // espacio (namespaced), Para ello, tenemos que establecer
+  // la opción namespaced a true, esto hará que cuando lancemos
+  // la apliación veremos en Vuex en getters products/availableProducts
+  // y products/productsInStock
+  namespaced: true,
   state: {
     // products: [],// Vue modules 5:27 cambiamos el nombre para hacerlo más acorde
     items: []       // y tenemos que modificar los state.products por state.items
@@ -10,7 +17,7 @@ export default {
       // return state.products.filter(product => product.inventory > 0);
       return state.items.filter(product => product.inventory > 0);
     },
-    productsInStock(state) {
+    productIsInStock(state) {
       // Nos devolverá una función que aceptará un producto como un argumento
       // En lugar de pasar un producto, podemos pasar su código com argumento
       // y tomar el producto del estado, aunque basta con pasar el objeto product
@@ -33,6 +40,8 @@ export default {
   },
   actions: {
     fetchProducts({commit}) {
+      console.log('Hi from products ', commit);
+
       // make the call
       // then run setProducts mutations
       // Las acciones son usualmente asíncronas necesitamos saber cuando

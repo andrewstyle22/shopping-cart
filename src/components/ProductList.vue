@@ -14,7 +14,7 @@
              como argumento
         -->
         <button
-          :disabled="!productsInStock(product)"
+          :disabled="!productIsInStock(product)"
           @click="addProductToCart(product)">
           Add to Cart
         </button>
@@ -49,12 +49,16 @@ export default {
   },
   computed: {
     // fusionar mapState
-    ...mapState({
+    // ...mapState({ // Namespaced Vuex Modules: 4:16 comentamos este para agregar el namespaced
+    ...mapState('products', {
       // products: state => state.products, // Vuex Modules 4:46 cambia, lo demás no cambia
                                             // porque están registradas bajo el espacio de
                                             // nombre global (global namespace)
       // products: state => state.products.products,// Vue modules 5:53 hemos cambiado el nombre
-      products: state => state.products.items,
+      // products: state => state.products.items,
+      products: state => state.items,
+      // Namespaced Vuex Modules: 4:16 products: state => state.products.items, esto asi funciona
+      // pero pasaremos el namespaced products aquí y después con mapGetters
     }),
     // como declaramos products dentro del mapState, no necesitamos la propiedad
     // 'products' antigua
@@ -70,8 +74,10 @@ export default {
 
     //  return this.$store.state.products;
     // },
-    ...mapGetters({
-      productsInStock: 'productsInStock'
+    // Namespaced Vuex Modules: 4:18 pasamos el namespaced products, sino tendríamos que
+    // poner  productsInStock: 'products/productsInStock'
+    ...mapGetters('products', {
+      productIsInStock: 'productIsInStock'
     }),
     // al mapear el getter commentamos lo de abajo
     // este devolverá el getter productsInStock
@@ -143,13 +149,16 @@ export default {
     // fucionar métodos locales
     // Helper mapActions maperá métodos locales a store.dispatch
     ...mapActions({
-      fetchProducts: 'fetchProducts',// podemos usarlo escribiendo this.fetchProducts
+      //Namespaced Vuex Modules: 4:39 añadimos el namespaced a las acciónes
+      fetchProducts: 'products/fetchProducts',
+      // fetchProducts: 'fetchProducts',// podemos usarlo escribiendo this.fetchProducts
                                      // porque de hecho estamos ejecutando
                                      // $store.dispatch('fetchProducts') en el fondo
                                      // fetchProducts la estamos usando en create()
                                      // la podemos reemplazar la llamada dispatch con
                                      // this.fetchProducts
-      addProductToCart: 'addProductToCart', // comentamos el métodos addProductToCart(product)
+      // addProductToCart: 'addProductToCart', // comentamos el métodos addProductToCart(product)
+      addProductToCart: 'cart/addProductToCart',
     }),
     // addProductToCart(product) {
     //   this.$store.dispatch('addProductToCart', product)
